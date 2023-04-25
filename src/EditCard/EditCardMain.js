@@ -18,20 +18,22 @@ function EditCardMain({ header, initialFormData, submitHandler }) {
   const { cardId } = useParams();
   const { url } = useRouteMatch();
 
-  // const [Cards, setCards] = useState([]);
-  // const [Title, setTitle] = useState([]);
-  // const [Description, setDescription] = useState([]);
+  const [Cards, setCards] = useState([]);
+  const [Title, setTitle] = useState([]);
+  const [Description, setDescription] = useState([]);
 
   useEffect(() => {
     readDeck(deckId).then((response) => {
-      // setTitle(response.name);
-      // setDescription(response.description);
-      // setCards(response.cards);
-      // console.log(Cards);
-      setFormData(response)
+      setTitle(response.name);
+      setDescription(response.description);
+      setCards(response.cards);
+      console.log(response.cards[cardId]);
+      setFormData(response.cards[cardId]);
     });
   }, []);
+
   const [formData, setFormData] = useState(initialFormData);
+
   function handleInput(event) {
     setFormData({
       ...formData,
@@ -40,10 +42,11 @@ function EditCardMain({ header, initialFormData, submitHandler }) {
   }
 
   function handleFormSubmit(event) {
+    // console.log("hello")
     event.preventDefault();
     console.log(formData);
     // using the prop to pass the information back to the App component
-    submitHandler(formData).then(()=>history.push("/"))
+    submitHandler(formData).then(() => history.push("/"));
     setFormData({ ...initialFormData });
   }
   return (
@@ -57,7 +60,7 @@ function EditCardMain({ header, initialFormData, submitHandler }) {
               <a href="/">Home</a>
             </li>
             <li className="breadcrumb-item">
-              <a href={`/decks/${deckId}`}>{formData.name}</a>
+              <a href={`/decks/${deckId}`}>{Title}</a>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
               {`Edit Card ${cardId}`}
